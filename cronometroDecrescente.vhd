@@ -158,7 +158,8 @@ begin
 							contadorSegundos <= 0;
 							contadorCentesimos <= 0;
 						end if;
-					end if;	
+					end if;
+				when others =>
 			end case;
 		end if;
   end process; 
