@@ -1,0 +1,46 @@
+#@brief Mapeamento da placa Nexys2
+
+#Clock e reset
+NET "clock50Mhz" LOC = "B8"; 
+NET "resetPlaca" LOC = "B18";
+
+#Display-anodos
+NET "displaySeg[7]"	LOC = L18;	# Segment a
+NET "displaySeg[6]"	LOC = F18;	# Segment b
+NET "displaySeg[5]"	LOC = D17;	# Segment c
+NET "displaySeg[4]"	LOC = D16;	# Segment d
+NET "displaySeg[3]"	LOC = G14;	# Segment e
+NET "displaySeg[2]"	LOC = J17;	# Segment f
+NET "displaySeg[1]"	LOC = H14;	# Segment g
+NET "displaySeg[0]"	LOC = C17;	# Segment dp - decimal point
+NET "displayAn[3]"	LOC = F17;	# anodo 3
+NET "displayAn[2]"	LOC = H17;	# anodo 2
+NET "displayAn[1]"	LOC = C18;	# anodo 1
+NET "displayAn[0]"	LOC = F15;	# anodo 
+
+#Chaves-switches
+NET "cSegundos<0>" LOC = "G18";  
+NET "cSegundos<1>" LOC = "H18";  
+NET "cMinutos<0>" LOC = "K18";  
+NET "cMinutos<1>" LOC = "K17";  
+NET "cMinutos<2>" LOC = "L14";  
+NET "cMinutos<3>" LOC = "L13";  
+NET "cQuarto<0>" LOC = "N17";
+NET "cQuarto<1>" LOC = "R17";
+
+#Botoes
+NET "btnParaContinua" LOC = "E18";   
+NET "btnNovoQuarto" LOC = "D18";    
+NET "btnCarga" LOC = "H13";  
+
+#LEDs dos minutos
+NET "ledsMinutos<0>" LOC = "J14";
+NET "ledsMinutos<1>" LOC = "J15";
+NET "ledsMinutos<2>" LOC = "K15";
+NET "ledsMinutos<3>" LOC = "K14"; 
+
+#LEDs do quarto
+NET "ledsQuarto<0>" LOC = "E16";
+NET "ledsQuarto<1>" LOC = "P16"; 
+NET "ledsQuarto<2>" LOC = "E4";
+NET "ledsQuarto<3>" LOC = "P4"; 

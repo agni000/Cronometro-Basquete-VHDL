@@ -15,11 +15,11 @@ entity topoCronometroDec is
         btnNovoQuarto : in std_logic;   
         btnCarga : in std_logic;  
 		  
-	--!Switches/chaves para configuração
+        --!Switches/chaves para configuração
         cQuarto   : in std_logic_vector(1 downto 0);   
         cMinutos  : in std_logic_vector(3 downto 0);   
         cSegundos : in std_logic_vector(1 downto 0);   
-		  
+	  
 	--!LEDs para mostrar quarto e minutos
         ledsQuarto  : out std_logic_vector(3 downto 0);
         ledsMinutos : out std_logic_vector(3 downto 0);		
@@ -34,12 +34,18 @@ end topoCronometroDec;
 architecture topoCronometroDec of topoCronometroDec is
 
   --!Sinais a serem convertidos pela ROM
-  signal segundosBin : std_logic_vector(7 downto 0);
-  signal centesimosBin : std_logic_vector(7 downto 0);
+  signal segundosSeisBits : std_logic_vector(5 downto 0);
+  signal centesimosSeteBits : std_logic_vector(6 downto 0);
+  
+  signal segundosInteiro : integer range 0 to 59;
+  signal centesimosInteiro : integer range 0 to 99;
   
   --!Sinais de segundos e centesimos para o display 
   signal segundosBCD : std_logic_vector(7 downto 0);
   signal centesimosBCD : std_logic_vector(7 downto 0);
+  
+  --!Sinal para conversao one-hot do quarto
+  signal ledsQuartoDoisBits : std_logic_vector(1 downto 0);
   
   --!Sinais auxiliares dos botoes pos-debounce
   signal btnDbParaContinua : std_logic;
@@ -80,6 +86,7 @@ architecture topoCronometroDec of topoCronometroDec is
   --!Vetor de dados para driver de display
   signal d0, d1, d2, d3 : std_logic_vector(5 downto 0);
 
+--!Inicia implementacao da arquitetura
 begin
 	
 	--!Instancia do cronometro decrescente
@@ -93,15 +100,30 @@ begin
 		 cQuarto => cQuarto,
 		 cMinutos => cMinutos,
 		 cSegundos => cSegundos,
-		 quarto => ledsQuarto,
+		 quarto => ledsQuartoDoisBits,
 		 minutos => ledsMinutos,
-		 segundos => segundosBin,
-		 centesimos => centesimosBin
+		 segundos => segundosSeisBits,
+		 centesimos => centesimosSeteBits
      );
-  	
+ 
+  --!Conversao 2bits para one-hot do quarto para as leds
+  conversaoOneHot: process(ledsQuartoDoisBits)
+  begin
+		case ledsQuartoDoisBits is
+			when "00" => ledsQuarto <= "0001";
+			when "01" => ledsQuarto <= "0010";
+			when "10" => ledsQuarto <= "0100"; 
+			when "11" => ledsQuarto <= "1000";
+			when others => ledsQuarto <= "0000"; 
+		end case;
+  end process;	
+  
+  segundosInteiro <= to_integer(unsigned(segundosSeisBits));
+  centesimosInteiro <= to_integer(unsigned(centesimosSeteBits));   
+  
   --!Conversao para BCD usando ROM
-  segundosBCD <= conv_to_BCD(segundosBin);
-  centesimosBCD <= conv_to_BCD(centesimosBin);	
+  segundosBCD <= conv_to_BCD(segundosInteiro);
+  centesimosBCD <= conv_to_BCD(centesimosInteiro);	
 	
   d0 <= '1' & segundosBCD(7 downto 4) & '1';  
   d1 <= '1' & segundosBCD(3 downto 0) & '1';
@@ -111,8 +133,8 @@ begin
   --!Instancia do driver de display 
   displayDriver : entity work.dspl_drv
     port map (
-      clock  => clock,
-      reset  => reset,
+      clock  => clock50Mhz,
+      reset  => resetPlaca,
       d0     => d0,
       d1     => d1,
       d2     => d2,
@@ -124,8 +146,8 @@ begin
   --!Debounce botao novo-quarto	
   debounceNovoQuarto : entity work.Debounce
 	 port map(
-      		clock  => clock50Mhz,
-      		reset  => resetPlaca,
+      clock  => clock50Mhz,
+      reset  => resetPlaca,
 		key    => btnNovoQuarto,
 		debkey => btnDbNovoQuarto	
 	 );
@@ -133,17 +155,17 @@ begin
   --!Debounce botao para-continua	
   debounceParaContinua : entity work.Debounce
 	 port map(
-      		clock  => clock50Mhz,
-      		reset  => resetPlaca,
+      clock  => clock50Mhz,
+      reset  => resetPlaca,
 		key    => btnParaContinua,
 		debkey => btnDbParaContinua	
 	 );
   
   --!Debounce botao carga	
-  debounceNovoQuarto : entity work.Debounce
+  debounceCarga : entity work.Debounce
 	 port map(
-      		clock  => clock50Mhz,
-      		reset  => resetPlaca,
+      clock  => clock50Mhz,
+      reset  => resetPlaca,
 		key    => btnCarga,
 		debkey => btnDbCarga	
 	 );

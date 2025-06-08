@@ -8,14 +8,14 @@ use ieee.numeric_std.all;
 entity cronometroDec is
 	port(
 		clock, reset : in std_logic;
-		paraContinua, novoQuarto, carga : in std_logic;		--! Botoes.
-		cQuarto : in std_logic_vector (1 downto 0);
+		paraContinua, novoQuarto, carga : in std_logic;		--!Botoes.
+		cQuarto 	: in std_logic_vector (1 downto 0);
 		cMinutos : in std_logic_vector (3 downto 0);
 		cSegundos : in std_logic_vector (1 downto 0);
-		quarto : out std_logic_vector (1 downto 0); 		--! 4 leds.
-		minutos : out std_logic_vector (3 downto 0); 		--! 4 leds.
-		segundos : out std_logic_vector (5 downto 0); 		--! 2 displays.
-		centesimos : out std_logic_vector (6 downto 0) 		--! 2 displays.
+		quarto : out std_logic_vector (1 downto 0); 	  	--!4 leds.
+		minutos : out std_logic_vector (3 downto 0); 		--!4 leds.
+		segundos : out std_logic_vector (5 downto 0); 		--!2 displays.
+		centesimos : out std_logic_vector (6 downto 0) 		--!2 displays.
 	);
 end cronometroDec;
 
@@ -37,7 +37,7 @@ architecture cronometroDec of cronometroDec is
   signal contadorCentesimos : integer range 0 to 99; 
   signal contadorSegundos : integer range 0 to 59;
   signal contadorMinutos : integer range 0 to 15;
-  signal contadorQuarto : integer range 1 to 4;
+  signal contadorQuarto : integer range 0 to 3;
 
   --!Estados da maquina de estados
   type estadoFMS is (REP, CONTA, LOAD, PARADO);
@@ -83,7 +83,7 @@ begin
 		proximoEstado <= estado; 
 		case estado is
 			when REP =>
-				if paraContinua = '1' and contadorQuarto <= 4 then
+				if paraContinua = '1' and contadorQuarto < 4 then
 					proximoEstado <= CONTA; 
 				elsif carga = '1' then
 					proximoEstado <= LOAD; 
@@ -117,7 +117,7 @@ begin
 			contadorCentesimos <= 0;
 			contadorSegundos <= 0;
 			contadorMinutos <= 15; 
-			contadorQuarto <= 1;
+			contadorQuarto <= 0;
 		elsif rising_edge(clock) then 
 			case estado is 
 				when CONTA => 
@@ -139,12 +139,12 @@ begin
 						end if;
 					end if;
 				when LOAD => 
-					contadorQuarto <= to_integer(unsigned(cQuarto)) + 1; --!Ajuste de 0-3 para 1-4
+					contadorQuarto <= to_integer(unsigned(cQuarto));
 					contadorMinutos <= to_integer(unsigned(cMinutos));
 					contadorCentesimos <= 0; 
 					--!Caso particular dos segundos, que aceita somente inputs de 0, 15, 30 e 45 segundos.
 					case to_integer(unsigned(cSegundos)) is
-						when 0  => contadorSegundos <= 0;
+						when 0   => contadorSegundos <= 0;
 						when 1  => contadorSegundos <= 15;
 						when 2  => contadorSegundos <= 30;
 						when 3  => contadorSegundos <= 45;
@@ -152,7 +152,7 @@ begin
 					end case; 
 				when PARADO =>
 					if novoQuarto = '1' and fimQuarto = '1' then
-						if contadorQuarto < 4 then
+						if contadorQuarto < 3 then
 							contadorQuarto <= contadorQuarto + 1;
 							contadorMinutos <= 15;
 							contadorSegundos <= 0;
@@ -165,9 +165,10 @@ begin
   end process; 
 
   --!Atribuicoes das saidas
-  quarto <= std_logic_vector(to_unsigned(contadorQuarto - 1, 2)); --!Ajuste de 1-4 para 0-3
+  quarto <= std_logic_vector(to_unsigned(contadorQuarto, 2)); 
   minutos <= std_logic_vector(to_unsigned(contadorMinutos, 4));
   segundos <= std_logic_vector(to_unsigned(contadorSegundos, 6));
   centesimos <= std_logic_vector(to_unsigned(contadorCentesimos, 7));  
+
 end cronometroDec;
 
