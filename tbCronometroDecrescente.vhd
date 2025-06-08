@@ -39,7 +39,7 @@ ARCHITECTURE behavior OF tbCronometroDec IS
    signal cMinutos : std_logic_vector(3 downto 0) := (others => '0');
    signal cSegundos : std_logic_vector(5 downto 0) := (others => '0');
 
- 	--!Outputs
+   --!Outputs
    signal quarto : std_logic_vector(1 downto 0);
    signal minutos : std_logic_vector(3 downto 0);
    signal segundos : std_logic_vector(5 downto 0);
@@ -50,7 +50,7 @@ ARCHITECTURE behavior OF tbCronometroDec IS
  
 BEGIN
  
-	--!Instancia a UUT
+   --!Instancia a UUT
    uut: cronometroDec PORT MAP (
           clock => clock,
           reset => reset,
@@ -86,14 +86,14 @@ BEGIN
         reset <= '0';
         wait for 10 ps;
 		  
-		  --!Verificar estado inicial
+	--!Verificar estado inicial
         assert quarto = "00" report "Erro: Quarto inicial deveria ser 0" severity error;
         assert minutos = "1111" report "Erro: Minutos iniciais deveriam ser 15" severity error;
         assert segundos = "000000" report "Erro: Segundos iniciais deveriam ser 0" severity error;
         assert centesimos = "0000000" report "Erro: Centesimos iniciais deveriam ser 0" severity error;
         report "Reset inicial - OK";
         
-		  --!Teste 2: Carregamento de valores
+        --!Teste 2: Carregamento de valores
         report "=== TESTE 2: Carregamento de valores ===";
         cQuarto <= "01";    -- Quarto 2 (representado como 1)
         cMinutos <= "1010"; -- 10 minutos
