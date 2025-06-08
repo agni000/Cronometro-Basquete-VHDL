@@ -15,16 +15,16 @@ entity topoCronometroDec is
         btnNovoQuarto : in std_logic;   
         btnCarga : in std_logic;  
 		  
-		  --!Switches/chaves para configuração
+	--!Switches/chaves para configuração
         cQuarto   : in std_logic_vector(1 downto 0);   
         cMinutos  : in std_logic_vector(3 downto 0);   
         cSegundos : in std_logic_vector(1 downto 0);   
 		  
-		  --!LEDs para mostrar quarto e minutos
+	--!LEDs para mostrar quarto e minutos
         ledsQuarto  : out std_logic_vector(3 downto 0);
         ledsMinutos : out std_logic_vector(3 downto 0);		
         
-		  --!Display de 7 segmentos
+	--!Display de 7 segmentos
         displaySeg : out std_logic_vector(7 downto 0); 
         displayAn  : out std_logic_vector(3 downto 0)	  
 	 );
@@ -51,14 +51,13 @@ architecture topoCronometroDec of topoCronometroDec is
   constant conv_to_BCD : ROM:=(
 			"00000000", "00000001", "00000010", "00000011", "00000100", -- 01-09
 			"00000101", "00000110", "00000111", "00001000", "00001001",
-         "00010000", "00010001", "00010010", "00010011", "00010100", -- 10-19
+         		"00010000", "00010001", "00010010", "00010011", "00010100", -- 10-19
 			"00010101", "00010110", "00010111", "00011000", "00011001", 
 			"00100000", "00100001", "00100010", "00100011", "00100100", -- 20-29
 			"00100101", "00100110", "00100111", "00101000", "00101001",
 			"00110000", "00110001", "00110010", "00110011", "00110100", -- 30-39
 			"00110101", "00110110", "00110111", "00111000", "00111001",
 			"01000000", "01000001", "01000010", "01000011", "01000100", -- 40-49
-
 			"01000101", "01000110", "01000111", "01001000", "01001001",
 			"01010000", "01010001", "01010010", "01010011", "01010100", -- 50-59
 			"01010101", "01010110", "01010111", "01011000", "01011001",
@@ -125,8 +124,8 @@ begin
   --!Debounce botao novo-quarto	
   debounceNovoQuarto : entity work.Debounce
 	 port map(
-      clock  => clock50Mhz,
-      reset  => resetPlaca,
+      		clock  => clock50Mhz,
+      		reset  => resetPlaca,
 		key    => btnNovoQuarto,
 		debkey => btnDbNovoQuarto	
 	 );
@@ -134,8 +133,8 @@ begin
   --!Debounce botao para-continua	
   debounceParaContinua : entity work.Debounce
 	 port map(
-      clock  => clock50Mhz,
-      reset  => resetPlaca,
+      		clock  => clock50Mhz,
+      		reset  => resetPlaca,
 		key    => btnParaContinua,
 		debkey => btnDbParaContinua	
 	 );
@@ -143,8 +142,8 @@ begin
   --!Debounce botao carga	
   debounceNovoQuarto : entity work.Debounce
 	 port map(
-      clock  => clock50Mhz,
-      reset  => resetPlaca,
+      		clock  => clock50Mhz,
+      		reset  => resetPlaca,
 		key    => btnCarga,
 		debkey => btnDbCarga	
 	 );

@@ -164,10 +164,10 @@ begin
 		end if;
   end process; 
 
---!Atribuicoes das saidas
-quarto <= std_logic_vector(to_unsigned(contadorQuarto - 1, 2)); --!Ajuste de 1-4 para 0-3
-minutos <= std_logic_vector(to_unsigned(contadorMinutos, 4));
-segundos <= std_logic_vector(to_unsigned(contadorSegundos, 6));
-centesimos <= std_logic_vector(to_unsigned(contadorCentesimos, 7));  
+  --!Atribuicoes das saidas
+  quarto <= std_logic_vector(to_unsigned(contadorQuarto - 1, 2)); --!Ajuste de 1-4 para 0-3
+  minutos <= std_logic_vector(to_unsigned(contadorMinutos, 4));
+  segundos <= std_logic_vector(to_unsigned(contadorSegundos, 6));
+  centesimos <= std_logic_vector(to_unsigned(contadorCentesimos, 7));  
 end cronometroDec;
 
