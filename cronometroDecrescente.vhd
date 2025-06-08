@@ -9,7 +9,7 @@ entity cronometroDec is
 	port(
 		clock, reset : in std_logic;
 		paraContinua, novoQuarto, carga : in std_logic;		--! Botoes.
-		cQuarto 	: in std_logic_vector (1 downto 0);
+		cQuarto : in std_logic_vector (1 downto 0);
 		cMinutos : in std_logic_vector (3 downto 0);
 		cSegundos : in std_logic_vector (1 downto 0);
 		quarto : out std_logic_vector (1 downto 0); 		--! 4 leds.
@@ -144,10 +144,10 @@ begin
 					contadorCentesimos <= 0; 
 					--!Caso particular dos segundos, que aceita somente inputs de 0, 15, 30 e 45 segundos.
 					case to_integer(unsigned(cSegundos)) is
-						when 0   => contadorSegundos <= 0;
-						when 15  => contadorSegundos <= 15;
-						when 30  => contadorSegundos <= 30;
-						when 45  => contadorSegundos <= 45;
+						when 0  => contadorSegundos <= 0;
+						when 1  => contadorSegundos <= 15;
+						when 2  => contadorSegundos <= 30;
+						when 3  => contadorSegundos <= 45;
 						when others => contadorSegundos <= 0;
 					end case; 
 				when PARADO =>
