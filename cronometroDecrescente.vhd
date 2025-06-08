@@ -11,8 +11,8 @@ entity cronometroDec is
 		paraContinua, novoQuarto, carga : in std_logic;		--! Botoes.
 		cQuarto 	: in std_logic_vector (1 downto 0);
 		cMinutos : in std_logic_vector (3 downto 0);
-		cSegundos : in std_logic_vector (5 downto 0);
-		quarto : out std_logic_vector (1 downto 0); 			--! 4 leds.
+		cSegundos : in std_logic_vector (1 downto 0);
+		quarto : out std_logic_vector (1 downto 0); 		--! 4 leds.
 		minutos : out std_logic_vector (3 downto 0); 		--! 4 leds.
 		segundos : out std_logic_vector (5 downto 0); 		--! 2 displays.
 		centesimos : out std_logic_vector (6 downto 0) 		--! 2 displays.
