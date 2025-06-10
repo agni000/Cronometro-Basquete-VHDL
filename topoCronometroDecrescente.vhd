@@ -146,8 +146,8 @@ begin
   --!Debounce botao novo-quarto	
   debounceNovoQuarto : entity work.Debounce
 	 port map(
-      clock  => clock50Mhz,
-      reset  => resetPlaca,
+      		clock  => clock50Mhz,
+      		reset  => resetPlaca,
 		key    => btnNovoQuarto,
 		debkey => btnDbNovoQuarto	
 	 );
@@ -155,8 +155,8 @@ begin
   --!Debounce botao para-continua	
   debounceParaContinua : entity work.Debounce
 	 port map(
-      clock  => clock50Mhz,
-      reset  => resetPlaca,
+      		clock  => clock50Mhz,
+      		reset  => resetPlaca,
 		key    => btnParaContinua,
 		debkey => btnDbParaContinua	
 	 );
@@ -164,8 +164,8 @@ begin
   --!Debounce botao carga	
   debounceCarga : entity work.Debounce
 	 port map(
-      clock  => clock50Mhz,
-      reset  => resetPlaca,
+      		clock  => clock50Mhz,
+      		reset  => resetPlaca,
 		key    => btnCarga,
 		debkey => btnDbCarga	
 	 );
