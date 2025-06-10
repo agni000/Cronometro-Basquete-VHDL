@@ -1,34 +1,14 @@
-LIBRARY ieee;
-USE ieee.std_logic_1164.ALL;
-USE ieee.numeric_std.ALL;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 --!@entity Testbench para o cronometro decrescente de basquete
---!		  estamos utilizando o modelo padrao disponivel no ISE, 
---!		  com a adicao de alguns testes.
-ENTITY tbCronometroDec IS
-END tbCronometroDec;
- 
-ARCHITECTURE behavior OF tbCronometroDec IS 
- 
-    --!@component da UUT
-    COMPONENT cronometroDec
-    PORT(
-         clock : IN  std_logic;
-         reset : IN  std_logic;
-         paraContinua : IN  std_logic;
-         novoQuarto : IN  std_logic;
-         carga : IN  std_logic;
-         cQuarto : IN  std_logic_vector(1 downto 0);
-         cMinutos : IN  std_logic_vector(3 downto 0);
-         cSegundos : IN  std_logic_vector(5 downto 0);
-         quarto : OUT  std_logic_vector(1 downto 0);
-         minutos : OUT  std_logic_vector(3 downto 0);
-         segundos : OUT  std_logic_vector(5 downto 0);
-         centesimos : OUT  std_logic_vector(6 downto 0)
-        );
-    END COMPONENT;
-    
+entity tbCronometroDec is
+end tbCronometroDec;
 
+--!@architecture Implementa o testbench 
+architecture behavior of tbCronometroDec is 
+  
    --!Inputs
    signal clock : std_logic := '0';
    signal reset : std_logic := '0';
@@ -37,21 +17,25 @@ ARCHITECTURE behavior OF tbCronometroDec IS
    signal carga : std_logic := '0';
    signal cQuarto : std_logic_vector(1 downto 0) := (others => '0');
    signal cMinutos : std_logic_vector(3 downto 0) := (others => '0');
-   signal cSegundos : std_logic_vector(5 downto 0) := (others => '0');
+   signal cSegundos : std_logic_vector(1 downto 0) := (others => '0');
 
    --!Outputs
    signal quarto : std_logic_vector(1 downto 0);
    signal minutos : std_logic_vector(3 downto 0);
    signal segundos : std_logic_vector(5 downto 0);
    signal centesimos : std_logic_vector(6 downto 0);
-
-   --!Definicao do clock
-   constant clock_period : time := 10 ps;
+	
+	signal clockPeriodo : time := 10 ns;
  
-BEGIN
+begin
  
    --!Instancia a UUT
-   uut: cronometroDec PORT MAP (
+   uut: entity work.cronometroDec
+	generic map (
+			 --!Vai deixar a simulacao mais rapida
+			 MAXCOUNT => 50  
+   )
+	port map(
           clock => clock,
           reset => reset,
           paraContinua => paraContinua,
@@ -64,67 +48,80 @@ BEGIN
           minutos => minutos,
           segundos => segundos,
           centesimos => centesimos
-        );
+   );
 
    --!Gerador de clock
-   clockProc :process
+   clockProc: process
    begin
 		clock <= '0';
-		wait for clock_period/2;
+		wait for clockPeriodo/2;
 		clock <= '1';
-		wait for clock_period/2;
+		wait for clockPeriodo/2;
    end process;
  
-
    --!Estimulos 
    estimulosProc: process
    begin		
         --!Teste 1: Reset inicial
         report "=== TESTE 1: Reset inicial ===";
         reset <= '1';
-        wait for 10 ps;
+        wait for 50 ns;
         reset <= '0';
-        wait for 10 ps;
+        wait for 100 ns;
 		  
-	--!Verificar estado inicial
+ 	--!Verificar estado inicial
         assert quarto = "00" report "Erro: Quarto inicial deveria ser 0" severity error;
         assert minutos = "1111" report "Erro: Minutos iniciais deveriam ser 15" severity error;
         assert segundos = "000000" report "Erro: Segundos iniciais deveriam ser 0" severity error;
         assert centesimos = "0000000" report "Erro: Centesimos iniciais deveriam ser 0" severity error;
         report "Reset inicial - OK";
         
-        --!Teste 2: Carregamento de valores
+	--!Teste 2: Carregamento de valores
         report "=== TESTE 2: Carregamento de valores ===";
         cQuarto <= "01";    -- Quarto 2 (representado como 1)
-        cMinutos <= "1010"; -- 10 minutos
-        cSegundos <= "001111"; -- 15 segundos
+        cMinutos <= "0001"; -- minutos
+        cSegundos <= "00"; -- segundos
         carga <= '1';
-        wait for 10 ps;
+        wait for 50 ns;
         carga <= '0';
-        wait for 10 ps;
+        wait for 100 ns;
 
         --!Verificar carregamento
         assert quarto = "01" report "Erro: Quarto nao carregado corretamente" severity error;
-        assert minutos = "1010" report "Erro: Minutos nao carregados corretamente" severity error;
-        assert segundos = "001111" report "Erro: Segundos nao carregados corretamente" severity error;
+        assert minutos = "0001" report "Erro: Minutos nao carregados corretamente" severity error;
+        assert segundos = "000000" report "Erro: Segundos nao carregados corretamente" severity error;
         report "Carregamento - OK";
 		  
         --!Teste 3: Iniciar contagem
         report "=== TESTE 3: Iniciar contagem ===";
         paraContinua <= '1';
-        wait for 10 ps;
+        wait for 50 ns;
         paraContinua <= '0';
 
         --!Aguardar alguns ciclos de contagem (simular alguns centesimos)
-        wait for 5 ms; -- Tempo suficiente para alguns decrementos
+        wait for 5 ms; --!Tempo suficiente para alguns decrementos
 
-        --!Verificar se está contando
+        --!Verificar se esta contando
         report "Tempo apos contagem: " & 
                "Q=" & integer'image(to_integer(unsigned(quarto))) &
                " M=" & integer'image(to_integer(unsigned(minutos))) &
                " S=" & integer'image(to_integer(unsigned(segundos))) &
-               " C=" & integer'image(to_integer(unsigned(centesimos)));		  
+               " C=" & integer'image(to_integer(unsigned(centesimos)));	
+
+			--!Teste 4: Novo quarto apos contagem
+			report "=== TESTE 4: Iniciar novo quarto ===";
+			novoQuarto <= '1';
+			wait for 50ns;
+			novoQuarto <= '0'; 	
+			wait for 100ns;
+			
+	--!Verificar se o quarto avancou e o restante das variaveis foi inicializado corretamente
+        assert quarto = "10" report "Erro: Quarto inicial deveria ser 2" severity error;
+	assert minutos = "1111" report "Erro: Minutos iniciais deveriam ser 15" severity error;
+        assert segundos = "000000" report "Erro: Segundos iniciais deveriam ser 0" severity error;
+        assert centesimos = "0000000" report "Erro: Centesimos iniciais deveriam ser 0" severity error;
+		  report "Novo quarto - OK";
       wait;
    end process;
 
-END;
+end;

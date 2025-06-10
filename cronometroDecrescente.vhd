@@ -6,13 +6,15 @@ use ieee.numeric_std.all;
 --!@brief Possui clock, reset e as entradas referentes ao setup do quarto (quarto, minutos, segundos e botoes),
 --! 		 as saidas sao orientadas aos leds e aos displays correspondentes a seus identificadores.
 entity cronometroDec is
+	--!50 MHz/100 = 500.000 ciclos
+	generic(MAXCOUNT: integer := 500000);
 	port(
 		clock, reset : in std_logic;
 		paraContinua, novoQuarto, carga : in std_logic;		--!Botoes.
 		cQuarto 	: in std_logic_vector (1 downto 0);
 		cMinutos : in std_logic_vector (3 downto 0);
 		cSegundos : in std_logic_vector (1 downto 0);
-		quarto : out std_logic_vector (1 downto 0); 	  	--!4 leds.
+		quarto : out std_logic_vector (1 downto 0); 		--!4 leds.
 		minutos : out std_logic_vector (3 downto 0); 		--!4 leds.
 		segundos : out std_logic_vector (5 downto 0); 		--!2 displays.
 		centesimos : out std_logic_vector (6 downto 0) 		--!2 displays.
@@ -24,9 +26,7 @@ end cronometroDec;
 architecture cronometroDec of cronometroDec is
   
   --!Sinais para o divisor do clock
-  --!50 MHz/100 = 500.000 ciclos
-  constant CICLOS_NECESSARIOS : integer := 500000;
-  signal contadorClock : integer range 0 to CICLOS_NECESSARIOS := 0;
+  signal contadorClock : integer range 0 to MAXCOUNT := 0;
   signal pulsoCentesimo : std_logic := '0';
 
   --!Sinais de controle
@@ -53,7 +53,7 @@ begin
 			contadorClock <= 0;
 			pulsoCentesimo <= '0';
 		elsif rising_edge(clock) then
-			if contadorClock = CICLOS_NECESSARIOS - 1 then
+			if contadorClock = MAXCOUNT - 1 then
 				contadorClock <= 0;
 				pulsoCentesimo <= '1';
 			else 
