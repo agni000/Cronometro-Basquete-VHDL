@@ -108,12 +108,12 @@ begin
                " S=" & integer'image(to_integer(unsigned(segundos))) &
                " C=" & integer'image(to_integer(unsigned(centesimos)));	
 
-			--!Teste 4: Novo quarto apos contagem
-			report "=== TESTE 4: Iniciar novo quarto ===";
-			novoQuarto <= '1';
-			wait for 50ns;
-			novoQuarto <= '0'; 	
-			wait for 100ns;
+	--!Teste 4: Novo quarto apos contagem
+	report "=== TESTE 4: Iniciar novo quarto ===";
+	novoQuarto <= '1';
+	wait for 50ns;
+	novoQuarto <= '0'; 	
+	wait for 100ns;
 			
 	--!Verificar se o quarto avancou e o restante das variaveis foi inicializado corretamente
         assert quarto = "10" report "Erro: Quarto inicial deveria ser 2" severity error;
