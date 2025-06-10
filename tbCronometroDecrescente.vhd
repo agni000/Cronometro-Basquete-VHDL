@@ -25,7 +25,7 @@ architecture behavior of tbCronometroDec is
    signal segundos : std_logic_vector(5 downto 0);
    signal centesimos : std_logic_vector(6 downto 0);
 	
-	signal clockPeriodo : time := 10 ns;
+   signal clockPeriodo : time := 10 ns;
  
 begin
  
@@ -78,9 +78,9 @@ begin
         
 	--!Teste 2: Carregamento de valores
         report "=== TESTE 2: Carregamento de valores ===";
-        cQuarto <= "01";    -- Quarto 2 (representado como 1)
-        cMinutos <= "0001"; -- minutos
-        cSegundos <= "00"; -- segundos
+        cQuarto <= "01";    --!Quarto 2 (representado como 01)
+        cMinutos <= "0001"; --!Minutos
+        cSegundos <= "00"; --!Segundos
         carga <= '1';
         wait for 50 ns;
         carga <= '0';
@@ -116,11 +116,11 @@ begin
 	wait for 100ns;
 			
 	--!Verificar se o quarto avancou e o restante das variaveis foi inicializado corretamente
-        assert quarto = "10" report "Erro: Quarto inicial deveria ser 2" severity error;
+        assert quarto = "10" report "Erro: Quarto nao carregado corretamente" severity error;
 	assert minutos = "1111" report "Erro: Minutos iniciais deveriam ser 15" severity error;
         assert segundos = "000000" report "Erro: Segundos iniciais deveriam ser 0" severity error;
         assert centesimos = "0000000" report "Erro: Centesimos iniciais deveriam ser 0" severity error;
-		  report "Novo quarto - OK";
+	report "Novo quarto - OK";
       wait;
    end process;
 
