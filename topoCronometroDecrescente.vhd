@@ -139,7 +139,7 @@ begin
       d1     => d1,
       d2     => d2,
       d3     => d3,
-      an 	 => displayAn,
+      an     => displayAn,
       dec_ddp => displaySeg
     );
 
