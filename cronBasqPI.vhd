@@ -5,7 +5,7 @@ use ieee.numeric_std.all;
 --!@entity Cronometro decrescente de basquete.
 --!@brief Possui clock, reset e as entradas referentes ao setup do quarto (quarto, minutos, segundos e botoes),
 --! 		 as saidas sao orientadas aos leds e aos displays correspondentes a seus identificadores.
-entity cronometroDec is
+entity cronBasqPI is
 	--!50 MHz/100 = 500.000 ciclos
 	generic(MAXCOUNT: integer := 500000);
 	port(
@@ -19,11 +19,11 @@ entity cronometroDec is
 		segundos : out std_logic_vector (5 downto 0); 		--!2 displays.
 		centesimos : out std_logic_vector (6 downto 0) 		--!2 displays.
 	);
-end cronometroDec;
+end cronBasqPI;
 
 --!@architecture Cronometro decrescente de basquete.
 --!@brief Logica da FMS e dos contadores de centesimos, segundos e minutos.
-architecture cronometroDec of cronometroDec is
+architecture cronBasqPI of cronBasqPI is
   
   --!Sinais para o divisor do clock
   signal contadorClock : integer range 0 to MAXCOUNT := 0;
@@ -144,7 +144,7 @@ begin
 					contadorCentesimos <= 0; 
 					--!Caso particular dos segundos, que aceita somente inputs de 0, 15, 30 e 45 segundos.
 					case to_integer(unsigned(cSegundos)) is
-						when 0   => contadorSegundos <= 0;
+						when 0  => contadorSegundos <= 0;
 						when 1  => contadorSegundos <= 15;
 						when 2  => contadorSegundos <= 30;
 						when 3  => contadorSegundos <= 45;
@@ -154,12 +154,14 @@ begin
 					if novoQuarto = '1' and fimQuarto = '1' then
 						if contadorQuarto < 3 then
 							contadorQuarto <= contadorQuarto + 1;
+						end if;
+					end if;
+				when REP =>
+						if contadorQuarto < 3 then
 							contadorMinutos <= 15;
 							contadorSegundos <= 0;
 							contadorCentesimos <= 0;
 						end if;
-					end if;
-				when others =>
 			end case;
 		end if;
   end process; 
@@ -170,5 +172,4 @@ begin
   segundos <= std_logic_vector(to_unsigned(contadorSegundos, 6));
   centesimos <= std_logic_vector(to_unsigned(contadorCentesimos, 7));  
 
-end cronometroDec;
-
+end cronBasqPI;

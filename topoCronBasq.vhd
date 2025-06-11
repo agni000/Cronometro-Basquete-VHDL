@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 
 --!@entity Entidade de topo para o cronometro de basquete
 --!@brief Integra cronometro, debounce dos botoes e drivers dos displays
-entity topoCronometroDec is
+entity topoCronometroBasq is
     port(
         --!Clock e Reset da placa
         clock50Mhz : in std_logic;           
@@ -15,11 +15,11 @@ entity topoCronometroDec is
         btnNovoQuarto : in std_logic;   
         btnCarga : in std_logic;  
 		  
-        --!Switches/chaves para configuração
+	--!Switches/chaves para configuração
         cQuarto   : in std_logic_vector(1 downto 0);   
         cMinutos  : in std_logic_vector(3 downto 0);   
         cSegundos : in std_logic_vector(1 downto 0);   
-	  
+		  
 	--!LEDs para mostrar quarto e minutos
         ledsQuarto  : out std_logic_vector(3 downto 0);
         ledsMinutos : out std_logic_vector(3 downto 0);		
@@ -28,10 +28,10 @@ entity topoCronometroDec is
         displaySeg : out std_logic_vector(7 downto 0); 
         displayAn  : out std_logic_vector(3 downto 0)	  
 	 );
-end topoCronometroDec;
+end topoCronometroBasq;
 
 --!@architecture Implementacao do arquivo de topo
-architecture topoCronometroDec of topoCronometroDec is
+architecture topoCronometroBasq of topoCronometroBasq is
 
   --!Sinais a serem convertidos pela ROM
   signal segundosSeisBits : std_logic_vector(5 downto 0);
@@ -90,7 +90,7 @@ architecture topoCronometroDec of topoCronometroDec is
 begin
 	
 	--!Instancia do cronometro decrescente
-	cronometroDecrescente : entity work.cronometroDec
+	cronometroBasquete : entity work.cronBasqPI
 	  port map (
 		 clock => clock50Mhz,
 		 reset => resetPlaca, 
@@ -139,7 +139,7 @@ begin
       d1     => d1,
       d2     => d2,
       d3     => d3,
-      an     => displayAn,
+      an 	 => displayAn,
       dec_ddp => displaySeg
     );
 
@@ -170,5 +170,4 @@ begin
 		debkey => btnDbCarga	
 	 );
  	 
-end topoCronometroDec;
-
+end topoCronometroBasq;

@@ -2,12 +2,12 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
---!@entity Testbench para o cronometro decrescente de basquete
-entity tbCronometroDec is
-end tbCronometroDec;
+--!@entity Testbench para o cronometro de basquete
+entity tbCronBasq is
+end tbCronBasq;
 
 --!@architecture Implementa o testbench 
-architecture behavior of tbCronometroDec is 
+architecture tbCronBasq of tbCronBasq is 
   
    --!Inputs
    signal clock : std_logic := '0';
@@ -30,11 +30,11 @@ architecture behavior of tbCronometroDec is
 begin
  
    --!Instancia a UUT
-   uut: entity work.cronometroDec
+   uut: entity work.cronBasqPI
 	generic map (
 			 --!Vai deixar a simulacao mais rapida
 			 MAXCOUNT => 50  
-   )
+   	)
 	port map(
           clock => clock,
           reset => reset,
@@ -48,7 +48,7 @@ begin
           minutos => minutos,
           segundos => segundos,
           centesimos => centesimos
-   );
+   	);
 
    --!Gerador de clock
    clockProc: process
@@ -69,7 +69,7 @@ begin
         reset <= '0';
         wait for 100 ns;
 		  
- 	--!Verificar estado inicial
+		  --!Verificar estado inicial
         assert quarto = "00" report "Erro: Quarto inicial deveria ser 0" severity error;
         assert minutos = "1111" report "Erro: Minutos iniciais deveriam ser 15" severity error;
         assert segundos = "000000" report "Erro: Segundos iniciais deveriam ser 0" severity error;
@@ -78,9 +78,9 @@ begin
         
 	--!Teste 2: Carregamento de valores
         report "=== TESTE 2: Carregamento de valores ===";
-        cQuarto <= "01";    --!Quarto 2 (representado como 01)
-        cMinutos <= "0001"; --!Minutos
-        cSegundos <= "00"; --!Segundos
+        cQuarto <= "01";    --!Quarto 2 (representado como 1)
+        cMinutos <= "0001"; --!minutos
+        cSegundos <= "00"; --!segundos
         carga <= '1';
         wait for 50 ns;
         carga <= '0';
@@ -100,13 +100,6 @@ begin
 
         --!Aguardar alguns ciclos de contagem (simular alguns centesimos)
         wait for 5 ms; --!Tempo suficiente para alguns decrementos
-
-        --!Verificar se esta contando
-        report "Tempo apos contagem: " & 
-               "Q=" & integer'image(to_integer(unsigned(quarto))) &
-               " M=" & integer'image(to_integer(unsigned(minutos))) &
-               " S=" & integer'image(to_integer(unsigned(segundos))) &
-               " C=" & integer'image(to_integer(unsigned(centesimos)));	
 
 	--!Teste 4: Novo quarto apos contagem
 	report "=== TESTE 4: Iniciar novo quarto ===";
