@@ -1,8 +1,8 @@
-# Cronômetro de Basquete em VHDL 🏀
+# Cronômetro de Basquete em VHDL 
 
-Um cronômetro decrescente para jogos de basquete implementado em VHDL, projetado para FPGAs com display de 7 segmentos e controles físicos.
+Um cronômetro decrescente para jogos de basquete implementado em VHDL, projetado para FPGAs com display de 7 segmentos e switches. Este é o terceiro trabalho da matéria Linguagem de Descrição de Hardware. 
 
-## 📋 Descrição
+## Descrição
 
 Este projeto implementa um cronômetro completo para partidas de basquete, com as seguintes funcionalidades:
 
@@ -13,7 +13,7 @@ Este projeto implementa um cronômetro completo para partidas de basquete, com a
 - **Debounce de botões** para eliminar ruídos e sinais prolongados 
 - **Configuração flexível** através de switches/chaves
 
-## 🎯 Funcionalidades
+## Funcionalidades
 
 ### Controles Principais
 - **Para/Continua**: Pausa e retoma a contagem do cronômetro
@@ -30,7 +30,7 @@ Este projeto implementa um cronômetro completo para partidas de basquete, com a
 - **LEDs de Quarto**: Indicação visual do quarto atual (one-hot encoding)
 - **LEDs de Minutos**: Indicação dos minutos restantes
 
-## 🔧 Arquitetura do Sistema
+## Arquitetura do Sistema
 
 ```
 topoCronometroDec (Entidade Principal)
@@ -59,9 +59,9 @@ topoCronometroDec (Entidade Principal)
    - ROM para conversão decimal → BCD
    - Suporte para valores de 0 a 99
 
-## 📌 Pinagem
+## Pinagem
 
-### Entradas
+### Entradas para o topo da hierarquia;
 | Sinal | Tipo | Descrição |
 |-------|------|-----------|
 | `clock50Mhz` | `std_logic` | Clock principal da placa |
@@ -73,7 +73,7 @@ topoCronometroDec (Entidade Principal)
 | `cMinutos` | `std_logic_vector(3:0)` | Chaves de setup para os minutos |
 | `cSegundos` | `std_logic_vector(1:0)` | Chaves de setup para os segundos |
 
-### Saídas
+### Saídas do topo da hierarquia; 
 | Sinal | Tipo | Descrição |
 |-------|------|-----------|
 | `ledsQuarto` | `std_logic_vector(3:0)` | LEDs indicadores do quarto |
